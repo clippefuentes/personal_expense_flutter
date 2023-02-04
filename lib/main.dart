@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: Colors.green,
           secondary: Colors.green,
+          error: Colors.red,
         ),
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
@@ -25,7 +26,11 @@ class MyApp extends StatelessWidget {
             fontFamily: 'OpenSans',
             fontSize: 20,
             fontWeight: FontWeight.bold,
-          )
+          ),
+          labelLarge: TextStyle(
+            color: Colors.white,
+          ),
+          // button: 
         ),
         appBarTheme: AppBarTheme(
           // textTheme: ThemeData.light().textTheme.copyWith(
@@ -51,18 +56,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    Transaction(
-      id: 'T',
-      title: 'Passive Income',
-      amount: 20000,
-      date: DateTime.now()
-    ),
-    Transaction(
-      id: 'T',
-      title: 'Sales',
-      amount: 50000,
-      date: DateTime.now()
-    ),
+    // Transaction(
+    //   id: 'T',
+    //   title: 'Passive Income',
+    //   amount: 20000,
+    //   date: DateTime.now()
+    // ),
+    // Transaction(
+    //   id: 'T',
+    //   title: 'Sales',
+    //   amount: 50000,
+    //   date: DateTime.now()
+    // ),
   ];
 
   final titleController = TextEditingController();
@@ -88,16 +93,24 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime date) {
     final newTransaction = Transaction(
       title: title,
       amount: amount, 
-      date: DateTime.now(),
+      date: date,
       id: DateTime.now().toString()
     );
 
     setState(() {
       _transactions.add(newTransaction);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) {
+        return element.id == id;
+      });
     });
   }
 
@@ -123,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(_recentTransactions),
-            TransactionList(_transactions),
+            Container(child: TransactionList(_transactions, _deleteTransaction)),
           ]
         ),
       ),
